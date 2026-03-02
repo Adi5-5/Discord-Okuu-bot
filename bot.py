@@ -57,3 +57,17 @@ async def on_message(message):
 import os
 TOKEN = os.getenv("DISCORD_TOKEN")
 client.run(TOKEN)
+
+import threading
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running"
+
+def run():
+    app.run(host="0.0.0.0", port=10000)
+
+threading.Thread(target=run).start()
