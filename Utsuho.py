@@ -4,7 +4,7 @@ import asyncio
 import os
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-HF_TOKEN = os.getenv("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")
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 # Modèle AI Hugging Face (rapide et stable pour Discord)
 MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
