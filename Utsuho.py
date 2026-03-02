@@ -3,7 +3,7 @@ import requests
 import asyncio
 import os
 
-DISCORD_TOKEN = os.getenv("MTQ3Nzc1MDgyNzAwNjQyNzI1MA.GzUndR.sXhn7SHMYiZPN8ddesm_MsTQPYiB1EHClXpM7s")
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 HF_TOKEN = os.getenv("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")
 
 # Modèle AI Hugging Face (rapide et stable pour Discord)
@@ -54,4 +54,4 @@ async def on_message(message):
         # Envoie la réponse
         await message.channel.send(response[:2000])
 
-client.run("MTQ3Nzc1MDgyNzAwNjQyNzI1MA.GzUndR.sXhn7SHMYiZPN8ddesm_MsTQPYiB1EHClXpM7s")
+client.run("DISCORD_TOKEN")
