@@ -54,4 +54,6 @@ async def on_message(message):
         # Envoie la réponse
         await message.channel.send(response[:2000])
 
-client.run("DISCORD_TOKEN")
+import os
+TOKEN = os.getenv("DISCORD_TOKEN")
+client.run(TOKEN)
