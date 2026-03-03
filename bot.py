@@ -16,16 +16,30 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 def query_ai(prompt):
+    formatted_prompt = f"<s>[INST] {prompt} [/INST]"
+
     payload = {
-        "inputs": prompt,
-        "parameters": {"max_new_tokens": 200, "temperature": 0.7}
+        "inputs": formatted_prompt,
+        "parameters": {
+            "max_new_tokens": 200,
+            "temperature": 0.7
+        }
     }
+
     response = requests.post(MODEL_URL, headers=headers, json=payload)
+
     if response.status_code != 200:
-        return "Erreur API."
+        print(response.text)  # pour voir l'erreur dans Railway logs
+        return "API Error."
+
     data = response.json()
+
     if isinstance(data, list) and "generated_text" in data[0]:
-        return data[0]["generated_text"]
+        text = data[0]["generated_text"]
+
+        # Retire le prompt pour ne garder que la réponse
+        return text.replace(formatted_prompt, "").strip()
+
     return "Erreur génération."
 
 @client.event
@@ -46,7 +60,7 @@ async def on_message(message):
         # Nettoyage du message : enlever la mention du bot
         prompt = message.content.replace(f"<@{client.user.id}>", "").strip()
 
-        await message.channel.send("⏳ Génération...")
+        await message.channel.send("⏳ Generating...")
 
         # Appelle l’IA
         response = await asyncio.to_thread(query_ai, prompt)
