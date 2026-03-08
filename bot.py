@@ -30,7 +30,7 @@ def query_ai(prompt):
         response = requests.post(MODEL_URL, headers=headers, json=payload)
         if response.status_code != 200:
             print("HF API Error:", response.text)
-            return "⚠️ Erreur API."
+            return "🔴 API Error (🖕)."
         data = response.json()
         if isinstance(data, list) and "generated_text" in data[0]:
             return data[0]["generated_text"]
