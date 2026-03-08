@@ -8,7 +8,7 @@ from flask import Flask
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
-MODEL_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small"
+MODEL_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 intents = discord.Intents.default()
