@@ -10,7 +10,7 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 # --- Modèle AI Hugging Face ultra-léger ---
-MODEL_URL = "https://api-inference.huggingface.co/models/guiferrarib/genesis-152m-instruct"
+MODEL_URL = "https://api-inference.huggingface.co/models/HuggingFaceTB/SmolLM2-360M-Instruct"
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 # --- Discord setup ---
