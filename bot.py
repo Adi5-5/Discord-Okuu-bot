@@ -7,7 +7,7 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 # Modèle AI Hugging Face (rapide et stable pour Discord)
-MODEL_URL = MODEL_URL = "https://api-inference.huggingface.co/models/EpistemeAI/PD_gemma-3n-E4B-v2"
+MODEL_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small"
 
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
