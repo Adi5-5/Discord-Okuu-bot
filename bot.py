@@ -6,44 +6,42 @@ import threading
 from flask import Flask
 
 # --- Tokens ---
-DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")  # Ton token Discord
-HF_TOKEN = os.getenv("HF_TOKEN")            # Ton token Hugging Face
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+HF_TOKEN = os.getenv("HF_TOKEN")
 
-# --- Modèle Hugging Face léger ---
-MODEL_NAME = "google/flan-t5-base"
-HF_URL = "https://api.huggingface.co/chat/completions"
-HEADERS = {
-    "Authorization": f"Bearer {HF_TOKEN}",
-    "Content-Type": "application/json"
-}
+# --- Modèle AI Hugging Face ultra-léger ---
+MODEL_URL = "https://api-inference.huggingface.co/models/guiferrarib/genesis-152m-instruct"
+headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
-# --- Discord client ---
+# --- Discord setup ---
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-# --- Fonction pour appeler l'IA ---
+# --- Fonction de requête AI ---
 def query_ai(prompt):
     payload = {
-        "model": MODEL_NAME,
-        "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        "max_tokens": 200
+        "inputs": prompt,
+        "options": {"wait_for_model": True},
+        "parameters": {"max_new_tokens": 150}
     }
+
     try:
-        response = requests.post(HF_URL, headers=HEADERS, json=payload)
+        response = requests.post(MODEL_URL, headers=headers, json=payload)
         if response.status_code != 200:
             print("HF API Error:", response.text)
-            return "⚠️ API Error"
+            return "⚠️ Erreur API."
         data = response.json()
-        return data["choices"][0]["message"]["content"]
+        if isinstance(data, list) and "generated_text" in data[0]:
+            return data[0]["generated_text"]
+        if isinstance(data, dict):
+            return data.get("generated_text", "⚠️ Pas de réponse")
+        return "⚠️ Erreur génération."
     except Exception as e:
         print("Request failed:", e)
-        return "⚠️ Request failed"
+        return "⚠️ Request failed."
 
-# --- Événements Discord ---
+# --- Events Discord ---
 @client.event
 async def on_ready():
     print(f"✅ Bot connecté en tant que {client.user}")
@@ -53,18 +51,18 @@ async def on_message(message):
     if message.author.bot:
         return
 
+    # Mention ou réponse
     if client.user in message.mentions:
         prompt = message.content.replace(f"<@{client.user.id}>", "").strip()
         if not prompt:
             return
 
-        await message.channel.send("⏳ Génération en cours...")
+        await message.channel.send("⏳ Please wait... ☢️")
         response = await asyncio.to_thread(query_ai, prompt)
         await message.channel.send(response[:2000])
 
-# --- Serveur Flask pour Railway ---
+# --- Serveur web pour Railway ---
 app = Flask(__name__)
-
 @app.route("/")
 def home():
     return "Bot running"
@@ -75,5 +73,5 @@ def run():
 
 threading.Thread(target=run).start()
 
-# --- Lancement du bot ---
+# --- Run Discord bot ---
 client.run(DISCORD_TOKEN)
