@@ -16,28 +16,29 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 def query_ai(prompt):
-    payload = {
-        "inputs": prompt,
-        "options": {"wait_for_model": True},
-        "parameters": {"max_new_tokens": 200}
-    }
+    try:
+        payload = {
+            "inputs": prompt,
+            "options": {"wait_for_model": True},
+            "parameters": {"max_new_tokens": 200}
+        }
 
-    response = requests.post(MODEL_URL, headers=headers, json=payload)
+        response = requests.post(MODEL_URL, headers=headers, json=payload)
 
-    if response.status_code != 200:
-        print(response.text)
-        return "API Error"
+        if response.status_code != 200:
+            print(response.text)
+            return "API Error"
 
-    data = response.json()
+        data = response.json()
 
-    if isinstance(data, list):
-        return data[0].get("generated_text", "No response")
+        if isinstance(data, list):
+            return data[0].get("generated_text", "No response")
 
-    if isinstance(data, dict):
-        return data.get("generated_text", "No response")
+        if isinstance(data, dict):
+            return data.get("generated_text", "No response")
 
-    return "Generation error"
-
+        return "Generation error"
+    
     except Exception as e:
         print("Request error:", e)
         return "⚠️ Request failed."
